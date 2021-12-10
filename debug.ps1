@@ -1,1 +1,1 @@
-python pycalc.py debug
+python3 calice.py debug
