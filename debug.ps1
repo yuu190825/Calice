@@ -1,0 +1,1 @@
+python pycalc.py debug
