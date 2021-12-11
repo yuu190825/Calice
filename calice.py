@@ -3,7 +3,6 @@ import threading
 import time
 import tkinter as tk
 import decimal
-#import math
 from datetime import datetime, timezone, timedelta
 import csv
 
@@ -106,20 +105,20 @@ def Fmt():
     elif ((not oprd_change) and (oou_ctrl == 1)): # up
             a = a.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_CEILING)
     elif ((not oprd_change) and (oou_ctrl == 2)): # 4 out 5 up
-            a = a.quantize(decimal.Decimal(dot_ctrl))
+            a = a.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_HALF_UP)
     elif (oprd_change and (oou_ctrl == 0)):
             b = b.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_FLOOR)
     elif (oprd_change and (oou_ctrl == 1)):
             b = b.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_CEILING)
     elif (oprd_change and (oou_ctrl == 2)):
-            b = b.quantize(decimal.Decimal(dot_ctrl))
+            b = b.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_HALF_UP)
     if fnshd:
         Chack_a()
 
 def Count():
     global set_ab, set_value, oprd_change, error, dot_mode, oprt, a, b, dot, dot_count
 
-    set_ab, set_value, dot_mode, dot, dot_count = False, False, False, 0.1, 1
+    set_ab, set_value, dot_mode, dot, dot_count = False, False, False, decimal.Decimal('0.1'), '0.0'
     try:
         if (oprt == "add"):
             a += b
@@ -210,7 +209,7 @@ def Button_function_clck(i):
             b *= decimal.Decimal('-1')
         Show()
     elif ((not T_mode) and (not error) and (i == "sqrt")):
-        set_value, dot_mode, dot, dot_count = True, False, 0.1, 1
+        set_value, dot_mode, dot, dot_count = True, False, decimal.Decimal('0.1'), '0.0'
         if (not oprd_change):
             a = a.sqrt()
         else:
@@ -235,7 +234,7 @@ def Button_function_m_clck(i):
     elif ((not T_mode) and (not error)):
         if (i == "mr"):
             Rst()
-            set_value, dot_mode, debug_msg_lock, dot, dot_count = True, False, True, 0.1, 1
+            set_value, dot_mode, debug_msg_lock, dot, dot_count = True, False, True, decimal.Decimal('0.1'), '0.0'
             if (not oprd_change):
                 a = m
             else:
@@ -257,7 +256,7 @@ def Button_oprt_clck(i):
     if ((not T_mode) and (not error)):
         fnshd = False
         if (not oprd_change):
-            set_ab, set_value, oprd_change, dot_mode, dot, dot_count = False, False, True, False, 0.1, 1
+            set_ab, set_value, oprd_change, dot_mode, dot, dot_count = False, False, True, False, decimal.Decimal('0.1'), '0.0'
         elif (oprd_change and set_ab):
             debug_msg_lock = True
             Count()
