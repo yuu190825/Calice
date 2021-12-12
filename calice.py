@@ -72,18 +72,10 @@ def Show_debug_msg():
 def Show(i = "n"):
     if ((i == "n") and error):
         Screen_Text.set("E ")
-    elif ((i == "n") and (not oprd_change) and (not dot_mode)):
-        Screen_Text.set(str(a) + " ")
-    elif ((i == "n") and (not oprd_change) and dot_mode and (dot == decimal.Decimal('0.1'))):
-        Screen_Text.set(str(a) + ". ")
-    elif ((i == "n") and (not oprd_change) and dot_mode and (dot < decimal.Decimal('0.1'))):
-        Screen_Text.set(str(a) + " ")
-    elif ((i == "n") and oprd_change and (not dot_mode)):
-        Screen_Text.set(str(b) + " ")
-    elif ((i == "n") and oprd_change and dot_mode and (dot == decimal.Decimal('0.1'))):
-        Screen_Text.set(str(b) + ". ")
-    elif ((i == "n") and oprd_change and dot_mode and (dot == decimal.Decimal('0.1'))):
-        Screen_Text.set(str(b) + " ")
+    elif ((i == "n") and ((not dot_mode) or (dot_mode and (dot < decimal.Decimal('0.1'))))):
+        Screen_Text.set((str(a) + " ") if (not oprd_change) else (str(b) + " "))
+    elif ((i == "n") and dot_mode and (dot == decimal.Decimal('0.1'))):
+        Screen_Text.set((str(a) + ". ") if (not oprd_change) else (str(b) + ". "))
     elif ((i == "a")):
         Screen_Text.set(str(a) + " ")
     Show_debug_msg()
