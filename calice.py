@@ -93,15 +93,15 @@ def Fmt():
     global a, b
 
     if ((not oprd_change) and (oou_ctrl == 0)): # out
-            a = a.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_FLOOR)
+            a = a.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_DOWN)
     elif ((not oprd_change) and (oou_ctrl == 1)): # up
-            a = a.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_CEILING)
+            a = a.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_UP)
     elif ((not oprd_change) and (oou_ctrl == 2)): # 4 out 5 up
             a = a.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_HALF_UP)
     elif (oprd_change and (oou_ctrl == 0)):
-            b = b.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_FLOOR)
+            b = b.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_DOWN)
     elif (oprd_change and (oou_ctrl == 1)):
-            b = b.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_CEILING)
+            b = b.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_UP)
     elif (oprd_change and (oou_ctrl == 2)):
             b = b.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_HALF_UP)
     if fnshd:
