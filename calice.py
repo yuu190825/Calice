@@ -202,11 +202,14 @@ def Button_function_clck(i):
         Show()
     elif ((not T_mode) and (not error) and (i == "sqrt")):
         set_value, dot_mode, dot, dot_count = True, False, decimal.Decimal('0.1'), '0.0'
-        if (not oprd_change):
-            a = a.sqrt()
-        else:
-            b = b.sqrt()
-        Fmt()
+        try:
+            if (not oprd_change):
+                a = a.sqrt()
+            else:
+                b = b.sqrt()
+            Fmt()
+        except: # (-a).sqrt or (-b).sqrt error
+            error = True
         Show()
     elif ((not T_mode) and (not error) and (i == "dot")):
         if (((not oprd_change) and (len(str(a)) < 12)) or (oprd_change and (len(str(b)) < 12))):
@@ -296,7 +299,7 @@ button_T = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBl
 button_BS = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "bs": Button_function_clck(x), fg = "Black", font = ("Noto Sans", 24), relief = "raised", text = "<-")
 button_C = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "c": Button_function_clck(x), fg = "Black", font = ("Noto Sans", 24), relief = "raised", text = "C")
 button_PosOrNeg = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "pon": Button_function_clck(x), fg = "Black", font = ("Noto Sans", 24), relief = "raised", text = "+/-")
-button_Sqrt = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "sqrt": Button_function_clck(x), fg = "Black", font = ("Noto Sans", 24), relief = "raised", text = "SR")
+button_Sqrt = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "sqrt": Button_function_clck(x), fg = "Black", font = ("Noto Sans", 24), relief = "raised", text = "sqrt")
 button_Dot = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "dot": Button_function_clck(x), fg = "Black", font = ("Noto Sans", 24), relief = "raised", text = ".")
 button_Equ = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "equ": Button_function_clck(x), fg = "Black", font = ("Noto Sans", 24), relief = "raised", text = "=")
 
