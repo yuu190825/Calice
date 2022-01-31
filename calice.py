@@ -54,8 +54,7 @@ def Time_show():
             Screen_Text.set("A%d/%s/%s %s:%s" % (Y_to_AY, month, day, hour, minute))
         time.sleep(1)
 
-t = threading.Thread(target = Time_show)
-t.setDaemon(True)
+t = threading.Thread(target = Time_show, daemon = True)
 
 # Function
 def Show_debug_msg():
@@ -208,7 +207,7 @@ def Button_function_clck(i):
             else:
                 b = b.sqrt()
             Fmt()
-        except: # (-a).sqrt or (-b).sqrt error
+        except: # (-a).sqrt() or (-b).sqrt() error
             error = True
         Show()
     elif ((not T_mode) and (not error) and (i == "dot")):
