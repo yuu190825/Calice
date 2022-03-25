@@ -48,7 +48,7 @@ def Time_show():
     while True:
         time_get = datetime.utcnow().replace(tzinfo = timezone.utc)
         tz_set = time_get.astimezone(timezone(timedelta(hours = int(app_set[0][1]))))
-        #Y_to_MyY = int(tz_set.strftime("%Y")) - 2020
+        Y_to_MyY = int(tz_set.strftime("%Y")) - 2021
         month = tz_set.strftime("%m")
         day = tz_set.strftime("%d")
         hour = tz_set.strftime("%H")
