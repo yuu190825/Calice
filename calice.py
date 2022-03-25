@@ -29,7 +29,7 @@ a = b = m = decimal.Decimal('0')
 dot, dot_count = decimal.Decimal('0.1'), '0.0'
 
 # Variable_Time
-Y_to_AY = 0
+Y_to_MyY = 0
 month = day = hour = minute = ""
 
 # Variable_PW
@@ -43,20 +43,20 @@ app_set = []
 
 # Thread
 def Time_show():
-    global Y_to_AY, month, day, hour, minute
+    global Y_to_MyY, month, day, hour, minute
 
     while True:
         time_get = datetime.utcnow().replace(tzinfo = timezone.utc)
         tz_set = time_get.astimezone(timezone(timedelta(hours = int(app_set[0][1]))))
-        Y_to_AY = int(tz_set.strftime("%Y")) - 2020
+        Y_to_MyY = int(tz_set.strftime("%Y")) - 2020
         month = tz_set.strftime("%m")
         day = tz_set.strftime("%d")
         hour = tz_set.strftime("%H")
         minute = tz_set.strftime("%M")
         if (L_mode and unlckable):
-            Screen_Text.set("(L) A%d/%s/%s %s:%s" % (Y_to_AY, month, day, hour, minute))
+            Screen_Text.set("(L) M%d/%s/%s %s:%s" % (Y_to_MyY, month, day, hour, minute))
         elif ((not L_mode) and T_mode):
-            Screen_Text.set("A%d/%s/%s %s:%s" % (Y_to_AY, month, day, hour, minute))
+            Screen_Text.set("M%d/%s/%s %s:%s" % (Y_to_MyY, month, day, hour, minute))
         time.sleep(1)
 
 t = threading.Thread(target = Time_show, daemon = True)
@@ -170,7 +170,7 @@ def Button_function_clck(i):
     if ((i == "l") and (not L_mode)):
         L_mode = True
         label_Screen.configure(anchor = "center")
-        Screen_Text.set("(L) A%d/%s/%s %s:%s" % (Y_to_AY, month, day, hour, minute))
+        Screen_Text.set("(L) M%d/%s/%s %s:%s" % (Y_to_MyY, month, day, hour, minute))
         unlckable = True
     elif ((i == "l") and L_mode and unlckable):
         label_Screen.configure(anchor = "w")
@@ -179,7 +179,7 @@ def Button_function_clck(i):
     elif ((not L_mode) and (i == "t") and (not T_mode)):
         T_mode = True
         label_Screen.configure(anchor = "center")
-        Screen_Text.set("A%d/%s/%s %s:%s" % (Y_to_AY, month, day, hour, minute))
+        Screen_Text.set("M%d/%s/%s %s:%s" % (Y_to_MyY, month, day, hour, minute))
     elif ((not L_mode) and (i == "t") and T_mode):
         T_mode = False
         label_Screen.configure(anchor = "e")
@@ -245,10 +245,10 @@ def Button_function_clck(i):
                 Show()
             else:
                 label_Screen.configure(anchor = "center")
-                Screen_Text.set("A%d/%s/%s %s:%s" % (Y_to_AY, month, day, hour, minute))
+                Screen_Text.set("M%d/%s/%s %s:%s" % (Y_to_MyY, month, day, hour, minute))
         else:
             label_Screen.configure(anchor = "center")
-            Screen_Text.set("(L) A%d/%s/%s %s:%s" % (Y_to_AY, month, day, hour, minute))
+            Screen_Text.set("(L) M%d/%s/%s %s:%s" % (Y_to_MyY, month, day, hour, minute))
             unlckable = True
         unlckng_PW = ""
 
