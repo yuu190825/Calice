@@ -80,7 +80,7 @@ def Show(i = "n"):
         Screen_Text.set((str(a) + " ") if (not oprd_change) else (str(b) + " "))
     elif ((i == "n") and dot_mode and (dot == decimal.Decimal('0.1'))):
         Screen_Text.set((str(a) + ". ") if (not oprd_change) else (str(b) + ". "))
-    elif ((i == "a")):
+    elif (i == "a"):
         Screen_Text.set(str(a) + " ")
     Show_debug_msg()
 
