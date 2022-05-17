@@ -74,24 +74,21 @@ def Show_debug_msg():
     debug_msg_lock = False
 
 def Show(i = "n"):
-    if ((i == "n") and error):
-        Screen_Text.set("E ")
-    elif ((i == "n") and ((not dot_mode) or (dot_mode and (dot < decimal.Decimal('0.1'))))):
+    global error
+
+    if ((i == "n") and ((not dot_mode) or (dot_mode and (dot < decimal.Decimal('0.1'))))):
         Screen_Text.set((str(a) + " ") if (not oprd_change) else (str(b) + " "))
     elif ((i == "n") and dot_mode and (dot == decimal.Decimal('0.1'))):
         Screen_Text.set((str(a) + ". ") if (not oprd_change) else (str(b) + ". "))
     elif (i == "a"):
         Screen_Text.set(str(a) + " ")
+    elif (i == "e"):
+        error = True
+        Screen_Text.set("E ")
     Show_debug_msg()
 
 def Chack_a():
-    global error
-
-    if (len(str(a)) <= 13):
-        Show("a")
-    else:
-        error = True
-        Show()
+    Show("a") if (len(str(a)) <= 13) else Show("e")
 
 def Fmt():
     global a, b
@@ -112,7 +109,7 @@ def Fmt():
         Chack_a()
 
 def Count():
-    global set_ab, set_value, oprd_change, error, dot_mode, oprt, a, b, dot, dot_count
+    global set_ab, set_value, oprd_change, dot_mode, oprt, a, b, dot, dot_count
 
     set_ab, set_value, dot_mode, dot, dot_count = False, False, False, decimal.Decimal('0.1'), '0.0'
     try:
@@ -133,8 +130,7 @@ def Count():
             oprd_change, oprt = False, "null"
             Fmt()
     except: # a/0 error
-        error = True
-        Show()
+        Show("e")
 
 def Rst():
     global set_ab, set_value, fnshd, a, b
