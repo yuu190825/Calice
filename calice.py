@@ -87,7 +87,7 @@ def Show(i = "n"):
         Screen_Text.set("E ")
     Show_debug_msg()
 
-def Chack_a():
+def Check_a():
     Show("a") if (len(str(a)) <= 13) else Show("e")
 
 def Fmt():
@@ -106,7 +106,7 @@ def Fmt():
     elif (oprd_change and (oou_ctrl == 2)):
             b = b.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_HALF_UP)
     if fnshd:
-        Chack_a()
+        Check_a()
 
 def Count():
     global set_ab, set_value, oprd_change, dot_mode, oprt, a, b, dot, dot_count
@@ -125,7 +125,7 @@ def Count():
             a = a ** b
         b = decimal.Decimal('0')
         if (not fnshd):
-            Chack_a()
+            Check_a()
         else:
             oprd_change, oprt = False, "null"
             Fmt()
