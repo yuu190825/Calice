@@ -73,61 +73,56 @@ def Show_debug_msg():
         print("dot = " + str(dot) + ", dot_count = " + dot_count + "\n")
     debug_msg_lock = False
 
-def Show(i = "n"):
-    global error
+def Execution(i):
+    global set_ab, set_value, oprd_change, error, dot_mode, oprt, a, b, dot, dot_count
+    step = "n"
 
-    if ((i == "n") and ((not dot_mode) or (dot_mode and (dot < decimal.Decimal('0.1'))))):
+    if ((i == "s") and ((not dot_mode) or (dot_mode and (dot < decimal.Decimal('0.1'))))):
         Screen_Text.set((str(a) + " ") if (not oprd_change) else (str(b) + " "))
-    elif ((i == "n") and dot_mode and (dot == decimal.Decimal('0.1'))):
+    elif ((i == "s") and dot_mode and (dot == decimal.Decimal('0.1'))):
         Screen_Text.set((str(a) + ". ") if (not oprd_change) else (str(b) + ". "))
-    elif (i == "a"):
+    if (i == "c"):
+        set_ab, set_value, dot_mode, dot, dot_count = False, False, False, decimal.Decimal('0.1'), '0.0'
+        try:
+            if (oprt == "add"):
+                a += b
+            elif (oprt == "sub"):
+                a -= b
+            elif (oprt == "mul"):
+                a *= b
+            elif (oprt == "div"):
+                a /= b
+            elif (oprt == "pow"):
+                a = a ** b
+            b = decimal.Decimal('0')
+            if (not fnshd):
+                step = "a" if (len(str(a)) <= 13) else "e"
+            else:
+                oprd_change, oprt = False, "null"
+                step = "f"
+        except: # a/0 error
+            step = "e"
+    if ((i == "f") or (step == "f")):
+        if ((not oprd_change) and (oou_ctrl == 0)): # out
+            a = a.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_DOWN)
+        elif ((not oprd_change) and (oou_ctrl == 1)): # up
+            a = a.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_UP)
+        elif ((not oprd_change) and (oou_ctrl == 2)): # 4 out 5 up
+            a = a.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_HALF_UP)
+        elif (oprd_change and (oou_ctrl == 0)):
+            b = b.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_DOWN)
+        elif (oprd_change and (oou_ctrl == 1)):
+            b = b.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_UP)
+        elif (oprd_change and (oou_ctrl == 2)):
+            b = b.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_HALF_UP)
+        if fnshd:
+            step = "a" if (len(str(a)) <= 13) else "e"
+    if (step == "a"):
         Screen_Text.set(str(a) + " ")
-    elif (i == "e"):
+    if (step == "e"):
         error = True
         Screen_Text.set("E ")
     Show_debug_msg()
-
-def Fmt():
-    global a, b
-
-    if ((not oprd_change) and (oou_ctrl == 0)): # out
-            a = a.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_DOWN)
-    elif ((not oprd_change) and (oou_ctrl == 1)): # up
-            a = a.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_UP)
-    elif ((not oprd_change) and (oou_ctrl == 2)): # 4 out 5 up
-            a = a.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_HALF_UP)
-    elif (oprd_change and (oou_ctrl == 0)):
-            b = b.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_DOWN)
-    elif (oprd_change and (oou_ctrl == 1)):
-            b = b.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_UP)
-    elif (oprd_change and (oou_ctrl == 2)):
-            b = b.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_HALF_UP)
-    if fnshd:
-        Show("a") if (len(str(a)) <= 13) else Show("e")
-
-def Count():
-    global set_ab, set_value, oprd_change, dot_mode, oprt, a, b, dot, dot_count
-
-    set_ab, set_value, dot_mode, dot, dot_count = False, False, False, decimal.Decimal('0.1'), '0.0'
-    try:
-        if (oprt == "add"):
-            a += b
-        elif (oprt == "sub"):
-            a -= b
-        elif (oprt == "mul"):
-            a *= b
-        elif (oprt == "div"):
-            a /= b
-        elif (oprt == "pow"):
-            a = a ** b
-        b = decimal.Decimal('0')
-        if (not fnshd):
-            Show("a") if (len(str(a)) <= 13) else Show("e")
-        else:
-            oprd_change, oprt = False, "null"
-            Fmt()
-    except: # a/0 error
-        Show("e")
 
 def Rst():
     global set_ab, set_value, fnshd, a, b
@@ -176,10 +171,10 @@ def Button_function_clck(i):
     elif ((not L_mode) and (i == "t") and T_mode):
         T_mode = False
         label_Screen.configure(anchor = "e")
-        Show()
+        Execution("s")
     elif ((not L_mode) and (not T_mode) and (i == "c")):
         set_ab, set_value, oprd_change, fnshd, error, dot_mode, oprt, a, b, dot, dot_count = False, False, False, False, False, False, "null", decimal.Decimal('0'), decimal.Decimal('0'), decimal.Decimal('0.1'), '0.0'
-        Show()
+        Execution("s")
     elif ((not L_mode) and (not T_mode) and (not error) and (i == "bs")):
         if (dot_mode and (dot_count != '0.0')):
             dot, dot_count = (dot / decimal.Decimal('0.1')), dot_count[:-1]
@@ -199,13 +194,13 @@ def Button_function_clck(i):
         elif ((not dot_mode) and oprd_change):
             b /= decimal.Decimal('10')
             b = b.quantize(decimal.Decimal('0'), rounding = decimal.ROUND_DOWN)
-        Show()
+        Execution("s")
     elif ((not L_mode) and (not T_mode) and (not error) and (i == "pon")):
         if (not oprd_change):
             a *= decimal.Decimal('-1')
         else:
             b *= decimal.Decimal('-1')
-        Show()
+        Execution("s")
     elif ((not L_mode) and (not T_mode) and (not error) and (i == "sqrt")):
         set_value, dot_mode, dot, dot_count = True, False, decimal.Decimal('0.1'), '0.0'
         try:
@@ -213,18 +208,18 @@ def Button_function_clck(i):
                 a = a.sqrt()
             else:
                 b = b.sqrt()
-            Fmt()
+            Execution("f")
         except: # (-a).sqrt() or (-b).sqrt() error
             error = True
-        Show()
+        Execution("s")
     elif ((not L_mode) and (not T_mode) and (not error) and (i == "dot")):
         if (((not oprd_change) and (len(str(a)) < 12)) or (oprd_change and (len(str(b)) < 12))):
             Rst()
             dot_mode = True
-            Show()
+            Execution("s")
     elif ((not L_mode) and (not T_mode) and (not error) and (i == "equ")):
         fnshd = True
-        Count()
+        Execution("c")
     elif (unlckng and (i == "bs")):
         if (unlckng_PW != ""):
             unlckng_PW = unlckng_PW[:-1]
@@ -235,7 +230,7 @@ def Button_function_clck(i):
             L_mode = False
             if (not T_mode):
                 label_Screen.configure(anchor = "e")
-                Show()
+                Execution("s")
             else:
                 label_Screen.configure(anchor = "center")
                 Screen_Text.set("M%d/%s/%s %s:%s" % (Y_to_MyY, month, day, hour, minute))
@@ -259,7 +254,7 @@ def Button_function_m_clck(i):
                 a = m
             else:
                 b = m
-            Show()
+            Execution("s")
         elif ((i == "msub") and (not oprd_change)):
             m -= a
         elif ((i == "msub") and oprd_change):
@@ -279,7 +274,7 @@ def Button_oprt_clck(i):
             set_ab, set_value, oprd_change, dot_mode, dot, dot_count = False, False, True, False, decimal.Decimal('0.1'), '0.0'
         elif (oprd_change and set_ab):
             debug_msg_lock = True
-            Count()
+            Execution("c")
         if (not error):
             oprt = i
         Show_debug_msg()
@@ -301,7 +296,7 @@ def Button_number_clck(i):
         elif (dot_mode and oprd_change and (len(str(b)) < 13)):
             b += (i * dot)
             dot, dot_count = (dot * decimal.Decimal('0.1')), (dot_count + '0')
-        Show()
+        Execution("s")
     elif unlckng:
         unlckng_PW += str(i)
         Screen_Text.set(" PW : " + ("*" * len(unlckng_PW)))
@@ -311,7 +306,7 @@ label_Screen = tk.Label(form, anchor = "e", bd = 1, bg = "AliceBlue", fg = "Blac
 
 label_Screen.place(x = 81, y = 6, width = 225, height = 50)
 
-Show() # load
+Execution("s") # load
 
 # Scale
 scale_OutOrUp = tk.Scale(form, activebackground = "LightSteelBlue", bd = 2.5, bg = "LightSteelBlue", command = Scale_oou_value_change, fg = "Black", font = ("Noto Sans", 13), orient = "horizontal", showvalue = False, tickinterval = 1, to = 2, troughcolor = "Black")
