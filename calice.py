@@ -73,14 +73,16 @@ def Show_debug_msg():
         print("dot = " + str(dot) + ", dot_count = " + dot_count + "\n")
     debug_msg_lock = False
 
+def Show():
+    if (((not dot_mode) or (dot_mode and (dot < decimal.Decimal('0.1'))))):
+        Screen_Text.set((str(a) + " ") if (not oprd_change) else (str(b) + " "))
+    elif (dot_mode and (dot == decimal.Decimal('0.1'))):
+        Screen_Text.set((str(a) + ". ") if (not oprd_change) else (str(b) + ". "))
+
 def Execution(i):
     global set_ab, set_value, oprd_change, error, dot_mode, oprt, a, b, dot, dot_count
     step = "n"
 
-    if ((i == "s") and ((not dot_mode) or (dot_mode and (dot < decimal.Decimal('0.1'))))):
-        Screen_Text.set((str(a) + " ") if (not oprd_change) else (str(b) + " "))
-    elif ((i == "s") and dot_mode and (dot == decimal.Decimal('0.1'))):
-        Screen_Text.set((str(a) + ". ") if (not oprd_change) else (str(b) + ". "))
     if (i == "c"):
         set_ab, set_value, dot_mode, dot, dot_count = False, False, False, decimal.Decimal('0.1'), '0.0'
         try:
@@ -171,10 +173,10 @@ def Button_function_clck(i):
     elif ((not L_mode) and (i == "t") and T_mode):
         T_mode = False
         label_Screen.configure(anchor = "e")
-        Execution("s")
+        Show()
     elif ((not L_mode) and (not T_mode) and (i == "c")):
         set_ab, set_value, oprd_change, fnshd, error, dot_mode, oprt, a, b, dot, dot_count = False, False, False, False, False, False, "null", decimal.Decimal('0'), decimal.Decimal('0'), decimal.Decimal('0.1'), '0.0'
-        Execution("s")
+        Show()
     elif ((not L_mode) and (not T_mode) and (not error) and (i == "bs")):
         if (dot_mode and (dot_count != '0.0')):
             dot, dot_count = (dot / decimal.Decimal('0.1')), dot_count[:-1]
@@ -194,13 +196,13 @@ def Button_function_clck(i):
         elif ((not dot_mode) and oprd_change):
             b /= decimal.Decimal('10')
             b = b.quantize(decimal.Decimal('0'), rounding = decimal.ROUND_DOWN)
-        Execution("s")
+        Show()
     elif ((not L_mode) and (not T_mode) and (not error) and (i == "pon")):
         if (not oprd_change):
             a *= decimal.Decimal('-1')
         else:
             b *= decimal.Decimal('-1')
-        Execution("s")
+        Show()
     elif ((not L_mode) and (not T_mode) and (not error) and (i == "sqrt")):
         set_value, dot_mode, dot, dot_count = True, False, decimal.Decimal('0.1'), '0.0'
         try:
@@ -211,12 +213,12 @@ def Button_function_clck(i):
             Execution("f")
         except: # (-a).sqrt() or (-b).sqrt() error
             error = True
-        Execution("s")
+        Show()
     elif ((not L_mode) and (not T_mode) and (not error) and (i == "dot")):
         if (((not oprd_change) and (len(str(a)) < 12)) or (oprd_change and (len(str(b)) < 12))):
             Rst()
             dot_mode = True
-            Execution("s")
+            Show()
     elif ((not L_mode) and (not T_mode) and (not error) and (i == "equ")):
         fnshd = True
         Execution("c")
@@ -230,7 +232,7 @@ def Button_function_clck(i):
             L_mode = False
             if (not T_mode):
                 label_Screen.configure(anchor = "e")
-                Execution("s")
+                Show()
             else:
                 label_Screen.configure(anchor = "center")
                 Screen_Text.set("M%d/%s/%s %s:%s" % (Y_to_MyY, month, day, hour, minute))
@@ -254,7 +256,7 @@ def Button_function_m_clck(i):
                 a = m
             else:
                 b = m
-            Execution("s")
+            Show()
         elif ((i == "msub") and (not oprd_change)):
             m -= a
         elif ((i == "msub") and oprd_change):
@@ -296,7 +298,7 @@ def Button_number_clck(i):
         elif (dot_mode and oprd_change and (len(str(b)) < 13)):
             b += (i * dot)
             dot, dot_count = (dot * decimal.Decimal('0.1')), (dot_count + '0')
-        Execution("s")
+        Show()
     elif unlckng:
         unlckng_PW += str(i)
         Screen_Text.set(" PW : " + ("*" * len(unlckng_PW)))
@@ -306,7 +308,7 @@ label_Screen = tk.Label(form, anchor = "e", bd = 1, bg = "AliceBlue", fg = "Blac
 
 label_Screen.place(x = 81, y = 6, width = 225, height = 50)
 
-Execution("s") # load
+Show() # load
 
 # Scale
 scale_OutOrUp = tk.Scale(form, activebackground = "LightSteelBlue", bd = 2.5, bg = "LightSteelBlue", command = Scale_oou_value_change, fg = "Black", font = ("Noto Sans", 13), orient = "horizontal", showvalue = False, tickinterval = 1, to = 2, troughcolor = "Black")
