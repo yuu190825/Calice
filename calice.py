@@ -119,11 +119,11 @@ def Execution(i):
             b = b.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_HALF_UP)
         if fnshd:
             step = "a" if (len(str(a)) <= 13) else "e"
-    if (step == "a"):
-        Screen_Text.set(str(a) + " ")
-    if (step == "e"):
+    if ((i == "e") or (step == "e")):
         error = True
         Screen_Text.set("E ")
+    if (step == "a"):
+        Screen_Text.set(str(a) + " ")
     Show_debug_msg()
 
 def Rst():
@@ -211,9 +211,9 @@ def Button_function_clck(i):
             else:
                 b = b.sqrt()
             Execution("f")
+            Show()
         except: # (-a).sqrt() or (-b).sqrt() error
-            error = True
-        Show()
+            Execution("e")
     elif ((not L_mode) and (not T_mode) and (not error) and (i == "dot")):
         if (((not oprd_change) and (len(str(a)) < 12)) or (oprd_change and (len(str(b)) < 12))):
             Rst()
