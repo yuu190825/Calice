@@ -78,6 +78,7 @@ def Show():
         Screen_Text.set((str(a) + " ") if (not oprd_change) else (str(b) + " "))
     elif (dot_mode and (dot == decimal.Decimal('0.1'))):
         Screen_Text.set((str(a) + ". ") if (not oprd_change) else (str(b) + ". "))
+    Show_debug_msg()
 
 def Execution(i):
     global set_ab, set_value, oprd_change, error, dot_mode, oprt, a, b, dot, dot_count
