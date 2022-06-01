@@ -6,6 +6,8 @@ import decimal
 from datetime import datetime, timezone, timedelta
 import csv
 
+# Ready to 3.0
+
 # Form
 form = tk.Tk()
 form.title("Calice")
@@ -15,12 +17,9 @@ form.resizable(False, False)
 form.geometry("312x418")
 
 # Variable_Switch
-# oprd_change : a or b
 L_mode = unlckable = unlckng = T_mode = set_ab = set_value = oprd_change = fnshd = error = dot_mode = debug_mode = debug_msg_lock = False
 
 # Variable_Ctrl
-# oprt : add(+) or sub(-) or mul(*) or div(/) or pow(^)
-# oou_ctrl : default = 4 out 5 up
 oprt = "null"
 oou_ctrl, dot_ctrl = 2, '0'
 
@@ -103,14 +102,18 @@ def Execution(i):
             else:
                 oprd_change, oprt = False, "null"
                 step = "f"
-        except: # a/0 error
+        except:
+            # a/0 error
             step = "e"
     if ((i == "f") or (step == "f")):
-        if ((not oprd_change) and (oou_ctrl == 0)): # out
+        # 0 -> out
+        # 1 -> up
+        # 2 -> 4 out 5 up
+        if ((not oprd_change) and (oou_ctrl == 0)):
             a = a.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_DOWN)
-        elif ((not oprd_change) and (oou_ctrl == 1)): # up
+        elif ((not oprd_change) and (oou_ctrl == 1)):
             a = a.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_UP)
-        elif ((not oprd_change) and (oou_ctrl == 2)): # 4 out 5 up
+        elif ((not oprd_change) and (oou_ctrl == 2)):
             a = a.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_HALF_UP)
         elif (oprd_change and (oou_ctrl == 0)):
             b = b.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_DOWN)
@@ -213,7 +216,8 @@ def Button_function_clck(i):
                 b = b.sqrt()
             Execution("f")
             Show()
-        except: # (-a).sqrt() or (-b).sqrt() error
+        except:
+            # (-a).sqrt() or (-b).sqrt() error
             Execution("e")
     elif ((not L_mode) and (not T_mode) and (not error) and (i == "dot")):
         if (((not oprd_change) and (len(str(a)) < 12)) or (oprd_change and (len(str(b)) < 12))):
@@ -309,16 +313,16 @@ label_Screen = tk.Label(form, anchor = "e", bd = 1, bg = "AliceBlue", fg = "Blac
 
 label_Screen.place(x = 81, y = 6, width = 225, height = 50)
 
-Show() # load
+Show()
 
 # Scale
 scale_OutOrUp = tk.Scale(form, activebackground = "LightSteelBlue", bd = 2.5, bg = "LightSteelBlue", command = Scale_oou_value_change, fg = "Black", font = ("Noto Sans", 13), orient = "horizontal", showvalue = False, tickinterval = 1, to = 2, troughcolor = "Black")
 scale_Dot = tk.Scale(form, activebackground = "LightSteelBlue", bd = 2.5, bg = "LightSteelBlue", command = Scale_dot_value_change, fg = "Black", font = ("Noto Sans", 13), orient = "horizontal", showvalue = False, tickinterval = 1, to = 3, troughcolor = "Black")
 
-scale_OutOrUp.place(x = 6, y = 62, width = 75) # height = 50
-scale_Dot.place(x = 81, y = 62, width = 75) # height = 50
+scale_OutOrUp.place(x = 6, y = 62, width = 75)
+scale_Dot.place(x = 81, y = 62, width = 75)
 
-scale_OutOrUp.set(2) # default = 4 out 5 up
+scale_OutOrUp.set(2)
 
 # Button_Function
 button_L = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "l": Button_function_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "L")
