@@ -1,10 +1,6 @@
 import sys
-import threading
-import time
 import tkinter as tk
 import decimal
-from datetime import datetime, timezone, timedelta
-import csv
 
 # Ready to 3.0
 
@@ -14,10 +10,10 @@ form.title("Calice")
 form.iconphoto(False, tk.PhotoImage(file = "./rec/calc.png"))
 form.configure(background = "LightSteelBlue")
 form.resizable(False, False)
-form.geometry("312x418")
+form.geometry("330x454")
 
 # Variable_Switch
-L_mode = unlckable = unlckng = T_mode = set_ab = set_value = oprd_change = fnshd = error = dot_mode = debug_mode = debug_msg_lock = False
+set_ab = set_value = oprd_change = fnshd = error = dot_mode = debug_mode = debug_msg_lock = False
 
 # Variable_Ctrl
 oprt = "null"
@@ -27,38 +23,8 @@ oou_ctrl, dot_ctrl = 2, '0'
 a = b = m = decimal.Decimal('0')
 dot, dot_count = decimal.Decimal('0.1'), '0.0'
 
-# Variable_Time
-Y_to_MyY = 0
-month = day = hour = minute = ""
-
-# Variable_PW
-unlckng_PW = ""
-
 # Variable_Other
 Screen_Text = tk.StringVar()
-
-# List_Set
-app_set = []
-
-# Thread
-def Time_show():
-    global Y_to_MyY, month, day, hour, minute
-
-    while True:
-        time_get = datetime.utcnow().replace(tzinfo = timezone.utc)
-        tz_set = time_get.astimezone(timezone(timedelta(hours = int(app_set[0][1]))))
-        Y_to_MyY = int(tz_set.strftime("%Y")) - 2021
-        month = tz_set.strftime("%m")
-        day = tz_set.strftime("%d")
-        hour = tz_set.strftime("%H")
-        minute = tz_set.strftime("%M")
-        if (L_mode and unlckable):
-            Screen_Text.set("(L) M%d/%s/%s %s:%s" % (Y_to_MyY, month, day, hour, minute))
-        elif ((not L_mode) and T_mode):
-            Screen_Text.set("M%d/%s/%s %s:%s" % (Y_to_MyY, month, day, hour, minute))
-        time.sleep(1)
-
-t = threading.Thread(target = Time_show, daemon = True)
 
 # Function
 def Show_debug_msg():
@@ -159,29 +125,12 @@ def Scale_dot_value_change(i):
 
 # Function_Button
 def Button_function_clck(i):
-    global L_mode, unlckable, unlckng, T_mode, set_ab, set_value, oprd_change, fnshd, error, dot_mode, oprt, a, b, dot, dot_count, unlckng_PW
+    global set_ab, set_value, oprd_change, fnshd, error, dot_mode, oprt, a, b, dot, dot_count
 
-    if ((i == "l") and (not L_mode)):
-        L_mode = True
-        label_Screen.configure(anchor = "center")
-        Screen_Text.set("(L) M%d/%s/%s %s:%s" % (Y_to_MyY, month, day, hour, minute))
-        unlckable = True
-    elif ((i == "l") and L_mode and unlckable):
-        label_Screen.configure(anchor = "w")
-        Screen_Text.set(" PW : ")
-        unlckable, unlckng = False, True
-    elif ((not L_mode) and (i == "t") and (not T_mode)):
-        T_mode = True
-        label_Screen.configure(anchor = "center")
-        Screen_Text.set("M%d/%s/%s %s:%s" % (Y_to_MyY, month, day, hour, minute))
-    elif ((not L_mode) and (i == "t") and T_mode):
-        T_mode = False
-        label_Screen.configure(anchor = "e")
-        Show()
-    elif ((not L_mode) and (not T_mode) and (i == "c")):
+    if (i == "c"):
         set_ab, set_value, oprd_change, fnshd, error, dot_mode, oprt, a, b, dot, dot_count = False, False, False, False, False, False, "null", decimal.Decimal('0'), decimal.Decimal('0'), decimal.Decimal('0.1'), '0.0'
         Show()
-    elif ((not L_mode) and (not T_mode) and (not error) and (i == "bs")):
+    elif ((not error) and (i == "bs")):
         if (dot_mode and (dot_count != '0.0')):
             dot, dot_count = (dot / decimal.Decimal('0.1')), dot_count[:-1]
             if (not oprd_change):
@@ -201,13 +150,15 @@ def Button_function_clck(i):
             b /= decimal.Decimal('10')
             b = b.quantize(decimal.Decimal('0'), rounding = decimal.ROUND_DOWN)
         Show()
-    elif ((not L_mode) and (not T_mode) and (not error) and (i == "pon")):
+    elif ((not error) and (i == "pon")):
         if (not oprd_change):
-            a *= decimal.Decimal('-1')
+            if (a != decimal.Decimal('0')):
+                a *= decimal.Decimal('-1')
         else:
-            b *= decimal.Decimal('-1')
+            if (b != decimal.Decimal('0')):
+                b *= decimal.Decimal('-1')
         Show()
-    elif ((not L_mode) and (not T_mode) and (not error) and (i == "sqrt")):
+    elif ((not error) and (i == "sqrt")):
         set_value, dot_mode, dot, dot_count = True, False, decimal.Decimal('0.1'), '0.0'
         try:
             if (not oprd_change):
@@ -219,41 +170,22 @@ def Button_function_clck(i):
         except:
             # (-a).sqrt() or (-b).sqrt() error
             Execution("e")
-    elif ((not L_mode) and (not T_mode) and (not error) and (i == "dot")):
+    elif ((not error) and (i == "dot")):
         if (((not oprd_change) and (len(str(a)) < 12)) or (oprd_change and (len(str(b)) < 12))):
             Rst()
             dot_mode = True
             Show()
-    elif ((not L_mode) and (not T_mode) and (not error) and (i == "equ")):
+    elif ((not error) and (i == "equ")):
         fnshd = True
         Execution("c")
-    elif (unlckng and (i == "bs")):
-        if (unlckng_PW != ""):
-            unlckng_PW = unlckng_PW[:-1]
-            Screen_Text.set(" PW : " + ("*" * len(unlckng_PW)))
-    elif (unlckng and (i == "equ")):
-        unlckng = False
-        if (unlckng_PW == app_set[1][1]):
-            L_mode = False
-            if (not T_mode):
-                label_Screen.configure(anchor = "e")
-                Show()
-            else:
-                label_Screen.configure(anchor = "center")
-                Screen_Text.set("M%d/%s/%s %s:%s" % (Y_to_MyY, month, day, hour, minute))
-        else:
-            label_Screen.configure(anchor = "center")
-            Screen_Text.set("(L) M%d/%s/%s %s:%s" % (Y_to_MyY, month, day, hour, minute))
-            unlckable = True
-        unlckng_PW = ""
 
 def Button_function_m_clck(i):
     global set_value, dot_mode, debug_msg_lock, a, b, m, dot, dot_count
 
-    if ((not L_mode) and (not T_mode) and (i == "mc")):
+    if (i == "mc"):
         m = decimal.Decimal('0')
         Show_debug_msg()
-    elif ((not L_mode) and (not T_mode) and (not error)):
+    elif (not error):
         if (i == "mr"):
             Rst()
             set_value, dot_mode, debug_msg_lock, dot, dot_count = True, False, True, decimal.Decimal('0.1'), '0.0'
@@ -275,7 +207,7 @@ def Button_function_m_clck(i):
 def Button_oprt_clck(i):
     global set_ab, set_value, oprd_change, fnshd, dot_mode, debug_msg_lock, oprt, dot, dot_count
 
-    if ((not L_mode) and (not T_mode) and (not error)):
+    if (not error):
         fnshd = False
         if (not oprd_change):
             set_ab, set_value, oprd_change, dot_mode, dot, dot_count = False, False, True, False, decimal.Decimal('0.1'), '0.0'
@@ -287,9 +219,9 @@ def Button_oprt_clck(i):
         Show_debug_msg()
 
 def Button_number_clck(i):
-    global a, b, dot, dot_count, unlckng_PW
+    global a, b, dot, dot_count
 
-    if ((not L_mode) and (not T_mode) and (not error)):
+    if (not error):
         Rst()
         if ((not dot_mode) and (not oprd_change) and (len(str(a)) < 13)):
             a *= decimal.Decimal('10')
@@ -304,14 +236,11 @@ def Button_number_clck(i):
             b += (i * dot)
             dot, dot_count = (dot * decimal.Decimal('0.1')), (dot_count + '0')
         Show()
-    elif unlckng:
-        unlckng_PW += str(i)
-        Screen_Text.set(" PW : " + ("*" * len(unlckng_PW)))
 
 # Screen
 label_Screen = tk.Label(form, anchor = "e", bd = 1, bg = "AliceBlue", fg = "Black", font = ("Noto Sans", 21), relief = "sunken", textvariable = Screen_Text)
 
-label_Screen.place(x = 81, y = 6, width = 225, height = 50)
+label_Screen.place(x = 6, y = 6, width = 237, height = 50)
 
 Show()
 
@@ -319,14 +248,12 @@ Show()
 scale_OutOrUp = tk.Scale(form, activebackground = "LightSteelBlue", bd = 2.5, bg = "LightSteelBlue", command = Scale_oou_value_change, fg = "Black", font = ("Noto Sans", 13), orient = "horizontal", showvalue = False, tickinterval = 1, to = 2, troughcolor = "Black")
 scale_Dot = tk.Scale(form, activebackground = "LightSteelBlue", bd = 2.5, bg = "LightSteelBlue", command = Scale_dot_value_change, fg = "Black", font = ("Noto Sans", 13), orient = "horizontal", showvalue = False, tickinterval = 1, to = 3, troughcolor = "Black")
 
-scale_OutOrUp.place(x = 6, y = 62, width = 75)
-scale_Dot.place(x = 81, y = 62, width = 75)
+scale_OutOrUp.place(x = 6, y = 62, width = 156)
+scale_Dot.place(x = 168, y = 62, width = 156)
 
 scale_OutOrUp.set(2)
 
 # Button_Function
-button_L = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "l": Button_function_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "L")
-button_T = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "t": Button_function_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "T")
 button_BS = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "bs": Button_function_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "<-")
 button_C = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "c": Button_function_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "C")
 button_PosOrNeg = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "pon": Button_function_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "+/-")
@@ -334,14 +261,12 @@ button_Sqrt = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "Stee
 button_Dot = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "dot": Button_function_clck(x), fg = "Black", font = ("Noto Sans", 24), text = ".")
 button_Equ = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "equ": Button_function_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "=")
 
-button_L.place(x = 6, y = 6, width = 75, height = 50)
-button_T.place(x = 156, y = 62, width = 75, height = 50)
-button_BS.place(x = 231, y = 62, width = 75, height = 50)
-button_C.place(x = 6, y = 112, width = 75, height = 50)
-button_PosOrNeg.place(x = 81, y = 112, width = 75, height = 50)
-button_Sqrt.place(x = 156, y = 112, width = 75, height = 50)
-button_Dot.place(x = 81, y = 362, width = 75, height = 50)
-button_Equ.place(x = 156, y = 362, width = 75, height = 50)
+button_BS.place(x = 249, y = 6, width = 75, height = 50)
+button_C.place(x = 6, y = 118, width = 75, height = 50)
+button_PosOrNeg.place(x = 87, y = 118, width = 75, height = 50)
+button_Sqrt.place(x = 168, y = 118, width = 75, height = 50)
+button_Dot.place(x = 87, y = 398, width = 75, height = 50)
+button_Equ.place(x = 168, y = 398, width = 75, height = 50)
 
 # Button_Function_M
 button_MC = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "mc": Button_function_m_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "MC")
@@ -349,10 +274,10 @@ button_MR = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelB
 button_MSub = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "msub": Button_function_m_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "M-")
 button_MAdd = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "madd": Button_function_m_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "M+")
 
-button_MC.place(x = 6, y = 162, width = 75, height = 50)
-button_MR.place(x = 81, y = 162, width = 75, height = 50)
-button_MSub.place(x = 156, y = 162, width = 75, height = 50)
-button_MAdd.place(x = 231, y = 162, width = 75, height = 50)
+button_MC.place(x = 6, y = 174, width = 75, height = 50)
+button_MR.place(x = 87, y = 174, width = 75, height = 50)
+button_MSub.place(x = 168, y = 174, width = 75, height = 50)
+button_MAdd.place(x = 249, y = 174, width = 75, height = 50)
 
 # Button_Oprt
 button_Pow = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "pow": Button_oprt_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "^")
@@ -361,11 +286,11 @@ button_Mul = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "Steel
 button_Sub = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "sub": Button_oprt_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "-")
 button_Add = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "add": Button_oprt_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "+")
 
-button_Pow.place(x = 231, y = 112, width = 75, height = 50)
-button_Div.place(x = 231, y = 212, width = 75, height = 50)
-button_Mul.place(x = 231, y = 262, width = 75, height = 50)
-button_Sub.place(x = 231, y = 312, width = 75, height = 50)
-button_Add.place(x = 231, y = 362, width = 75, height = 50)
+button_Pow.place(x = 249, y = 118, width = 75, height = 50)
+button_Div.place(x = 249, y = 230, width = 75, height = 50)
+button_Mul.place(x = 249, y = 286, width = 75, height = 50)
+button_Sub.place(x = 249, y = 342, width = 75, height = 50)
+button_Add.place(x = 249, y = 398, width = 75, height = 50)
 
 # Button_Number
 button_7 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = decimal.Decimal('7'): Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "7")
@@ -379,23 +304,18 @@ button_2 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBl
 button_3 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = decimal.Decimal('3'): Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "3")
 button_0 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = decimal.Decimal('0'): Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "0")
 
-button_7.place(x = 6, y = 212, width = 75, height = 50)
-button_8.place(x = 81, y = 212, width = 75, height = 50)
-button_9.place(x = 156, y = 212, width = 75, height = 50)
-button_4.place(x = 6, y = 262, width = 75, height = 50)
-button_5.place(x = 81, y = 262, width = 75, height = 50)
-button_6.place(x = 156, y = 262, width = 75, height = 50)
-button_1.place(x = 6, y = 312, width = 75, height = 50)
-button_2.place(x = 81, y = 312, width = 75, height = 50)
-button_3.place(x = 156, y = 312, width = 75, height = 50)
-button_0.place(x = 6, y = 362, width = 75, height = 50)
+button_7.place(x = 6, y = 230, width = 75, height = 50)
+button_8.place(x = 87, y = 230, width = 75, height = 50)
+button_9.place(x = 168, y = 230, width = 75, height = 50)
+button_4.place(x = 6, y = 286, width = 75, height = 50)
+button_5.place(x = 87, y = 286, width = 75, height = 50)
+button_6.place(x = 168, y = 286, width = 75, height = 50)
+button_1.place(x = 6, y = 342, width = 75, height = 50)
+button_2.place(x = 87, y = 342, width = 75, height = 50)
+button_3.place(x = 168, y = 342, width = 75, height = 50)
+button_0.place(x = 6, y = 398, width = 75, height = 50)
 
 # Main
 if ((len(sys.argv) == 2) and (sys.argv[1] == "debug")):
     debug_mode = True
-with open("./rec/set.csv", newline = "") as set_file:
-    rows = csv.reader(set_file)
-    for row in rows:
-        app_set.append(row)
-t.start()
 form.mainloop()
