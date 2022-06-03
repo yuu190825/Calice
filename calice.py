@@ -152,10 +152,10 @@ def Button_function_clck(i):
         Show()
     elif ((not error) and (i == "pon")):
         if (not oprd_change):
-            if (a != decimal.Decimal('0')):
+            if ((a > decimal.Decimal('0')) or (a < decimal.Decimal('0'))):
                 a *= decimal.Decimal('-1')
         else:
-            if (b != decimal.Decimal('0')):
+            if ((b > decimal.Decimal('0')) or (b < decimal.Decimal('0'))):
                 b *= decimal.Decimal('-1')
         Show()
     elif ((not error) and (i == "sqrt")):
