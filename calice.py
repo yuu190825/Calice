@@ -51,7 +51,7 @@ def Execution(i):
 
     if (i == "c"):
         set_ab, set_value, dot_mode, dot, dot_count = False, False, False, decimal.Decimal("0.1"), "0.0"
-        if (((a > decimal.Decimal("0")) or (a < decimal.Decimal("0"))) or (oprt != "pow") or (b >= decimal.Decimal("0"))):
+        if (((a > decimal.Decimal("0")) or (a < decimal.Decimal("0"))) or (oprt != "pow") or (b > decimal.Decimal("0"))):
             try:
                 if (oprt == "add"):
                     a += b
