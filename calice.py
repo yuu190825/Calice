@@ -2,15 +2,13 @@ import sys
 import tkinter as tk
 import decimal
 
-# Ready to 3.0
-
 # Form
 form = tk.Tk()
 form.title("Calice")
 form.iconphoto(False, tk.PhotoImage(file = "./rec/calc.png"))
 form.configure(background = "LightSteelBlue")
 form.resizable(False, False)
-form.geometry("330x454")
+form.geometry("330x448")
 
 # Variable_Switch
 set_ab = set_value = oprd_change = fnshd = error = dot_mode = debug_mode = debug_msg_lock = False
@@ -266,11 +264,11 @@ button_Dot = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "Steel
 button_Equ = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "equ": Button_function_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "=")
 
 button_BS.place(x = 249, y = 6, width = 75, height = 50)
-button_C.place(x = 6, y = 118, width = 75, height = 50)
-button_PosOrNeg.place(x = 87, y = 118, width = 75, height = 50)
-button_Sqrt.place(x = 168, y = 118, width = 75, height = 50)
-button_Dot.place(x = 87, y = 398, width = 75, height = 50)
-button_Equ.place(x = 168, y = 398, width = 75, height = 50)
+button_C.place(x = 6, y = 112, width = 75, height = 50)
+button_PosOrNeg.place(x = 87, y = 112, width = 75, height = 50)
+button_Sqrt.place(x = 168, y = 112, width = 75, height = 50)
+button_Dot.place(x = 87, y = 392, width = 75, height = 50)
+button_Equ.place(x = 168, y = 392, width = 75, height = 50)
 
 # Button_Function_M
 button_MC = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "mc": Button_function_m_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "MC")
@@ -278,10 +276,10 @@ button_MR = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelB
 button_MSub = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "msub": Button_function_m_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "M-")
 button_MAdd = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "madd": Button_function_m_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "M+")
 
-button_MC.place(x = 6, y = 174, width = 75, height = 50)
-button_MR.place(x = 87, y = 174, width = 75, height = 50)
-button_MSub.place(x = 168, y = 174, width = 75, height = 50)
-button_MAdd.place(x = 249, y = 174, width = 75, height = 50)
+button_MC.place(x = 6, y = 168, width = 75, height = 50)
+button_MR.place(x = 87, y = 168, width = 75, height = 50)
+button_MSub.place(x = 168, y = 168, width = 75, height = 50)
+button_MAdd.place(x = 249, y = 168, width = 75, height = 50)
 
 # Button_Oprt
 button_Pow = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "pow": Button_oprt_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "^")
@@ -290,11 +288,11 @@ button_Mul = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "Steel
 button_Sub = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "sub": Button_oprt_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "-")
 button_Add = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "add": Button_oprt_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "+")
 
-button_Pow.place(x = 249, y = 118, width = 75, height = 50)
-button_Div.place(x = 249, y = 230, width = 75, height = 50)
-button_Mul.place(x = 249, y = 286, width = 75, height = 50)
-button_Sub.place(x = 249, y = 342, width = 75, height = 50)
-button_Add.place(x = 249, y = 398, width = 75, height = 50)
+button_Pow.place(x = 249, y = 112, width = 75, height = 50)
+button_Div.place(x = 249, y = 224, width = 75, height = 50)
+button_Mul.place(x = 249, y = 280, width = 75, height = 50)
+button_Sub.place(x = 249, y = 336, width = 75, height = 50)
+button_Add.place(x = 249, y = 392, width = 75, height = 50)
 
 # Button_Number
 button_7 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = decimal.Decimal("7"): Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "7")
@@ -308,16 +306,16 @@ button_2 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBl
 button_3 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = decimal.Decimal("3"): Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "3")
 button_0 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = decimal.Decimal("0"): Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "0")
 
-button_7.place(x = 6, y = 230, width = 75, height = 50)
-button_8.place(x = 87, y = 230, width = 75, height = 50)
-button_9.place(x = 168, y = 230, width = 75, height = 50)
-button_4.place(x = 6, y = 286, width = 75, height = 50)
-button_5.place(x = 87, y = 286, width = 75, height = 50)
-button_6.place(x = 168, y = 286, width = 75, height = 50)
-button_1.place(x = 6, y = 342, width = 75, height = 50)
-button_2.place(x = 87, y = 342, width = 75, height = 50)
-button_3.place(x = 168, y = 342, width = 75, height = 50)
-button_0.place(x = 6, y = 398, width = 75, height = 50)
+button_7.place(x = 6, y = 224, width = 75, height = 50)
+button_8.place(x = 87, y = 224, width = 75, height = 50)
+button_9.place(x = 168, y = 224, width = 75, height = 50)
+button_4.place(x = 6, y = 280, width = 75, height = 50)
+button_5.place(x = 87, y = 280, width = 75, height = 50)
+button_6.place(x = 168, y = 280, width = 75, height = 50)
+button_1.place(x = 6, y = 336, width = 75, height = 50)
+button_2.place(x = 87, y = 336, width = 75, height = 50)
+button_3.place(x = 168, y = 336, width = 75, height = 50)
+button_0.place(x = 6, y = 392, width = 75, height = 50)
 
 # Main
 if ((len(sys.argv) == 2) and (sys.argv[1] == "debug")):
