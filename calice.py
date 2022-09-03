@@ -11,15 +11,14 @@ form.resizable(False, False)
 form.geometry("330x448")
 
 # Variable_Switch
-set_ab = set_value = oprd_change = fnshd = error = dot_mode = debug_mode = debug_msg_lock = False
+set_ab = set_value = oprd_change = fnshd = error = debug_mode = debug_msg_lock = False
 
 # Variable_Ctrl
 oprt = "null"
 oou_ctrl, dot_ctrl = 2, "0"
 
 # Variable_Value
-a = b = m = decimal.Decimal("0")
-dot, dot_count = decimal.Decimal("0.1"), "0.0"
+a = b = m = "0"
 
 # Variable_Other
 Screen_Text = tk.StringVar()
@@ -30,40 +29,36 @@ def Show_debug_msg():
 
     if (debug_mode and (not debug_msg_lock)):
         print("\n" + "set_ab = " + str(set_ab) + ", set_value = " + str(set_value) + ", oprd_change = " + str(oprd_change))
-        print("fnshd = " + str(fnshd) + ", error = " + str(error) + ", dot_mode = " + str(dot_mode) + "\n")
+        print("fnshd = " + str(fnshd) + ", error = " + str(error) + "\n")
         print("oprt = " + oprt + ", oou_ctrl = " + str(oou_ctrl) + ", dot_ctrl = " + dot_ctrl + "\n")
-        print("a = " + str(a) + ", b = " + str(b) + ", m = " + str(m))
-        print("dot = " + str(dot) + ", dot_count = " + dot_count + "\n")
+        print("a = " + a + ", b = " + b + ", m = " + m + "\n")
     debug_msg_lock = False
 
 def Show():
-    if (((not dot_mode) or (dot_mode and (dot < decimal.Decimal("0.1"))))):
-        Screen_Text.set((str(a) + " ") if (not oprd_change) else (str(b) + " "))
-    elif (dot_mode and (dot == decimal.Decimal("0.1"))):
-        Screen_Text.set((str(a) + ". ") if (not oprd_change) else (str(b) + ". "))
+    Screen_Text.set((a + " ") if (not oprd_change) else (b + " "))
     Show_debug_msg()
 
 def Execution(i):
-    global set_ab, set_value, oprd_change, error, dot_mode, oprt, a, b, dot, dot_count
+    global set_ab, set_value, oprd_change, error, oprt, a, b
     step = "n"
 
     if (i == "c"):
-        set_ab, set_value, dot_mode, dot, dot_count = False, False, False, decimal.Decimal("0.1"), "0.0"
-        if (((a > decimal.Decimal("0")) or (a < decimal.Decimal("0"))) or (oprt != "pow") or (b > decimal.Decimal("0"))):
+        set_ab = set_value = False
+        if (((decimal.Decimal(a) > decimal.Decimal("0")) or (decimal.Decimal(a) < decimal.Decimal("0"))) or (oprt != "pow") or (decimal.Decimal(b) > decimal.Decimal("0"))):
             try:
                 if (oprt == "add"):
-                    a += b
+                    a = str(decimal.Decimal(a) + decimal.Decimal(b))
                 elif (oprt == "sub"):
-                    a -= b
+                    a = str(decimal.Decimal(a) - decimal.Decimal(b))
                 elif (oprt == "mul"):
-                    a *= b
+                    a = str(decimal.Decimal(a) * decimal.Decimal(b))
                 elif (oprt == "div"):
-                    a /= b
+                    a = str(decimal.Decimal(a) / decimal.Decimal(b))
                 elif (oprt == "pow"):
-                    a = a ** b
-                b = decimal.Decimal("0")
+                    a = str(decimal.Decimal(a) ** decimal.Decimal(b))
+                b = "0"
                 if (not fnshd):
-                    step = "a" if (len(str(a)) <= 13) else "e"
+                    step = "a" if (len(a) <= 13) else "e"
                 else:
                     oprd_change, oprt = False, "null"
                     step = "f"
@@ -78,24 +73,24 @@ def Execution(i):
         # 1 -> up
         # 2 -> 4 out 5 up
         if ((not oprd_change) and (oou_ctrl == 0)):
-            a = a.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_DOWN)
+            a = str(decimal.Decimal(a).quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_DOWN))
         elif ((not oprd_change) and (oou_ctrl == 1)):
-            a = a.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_UP)
+            a = str(decimal.Decimal(a).quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_UP))
         elif ((not oprd_change) and (oou_ctrl == 2)):
-            a = a.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_HALF_UP)
+            a = str(decimal.Decimal(a).quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_HALF_UP))
         elif (oprd_change and (oou_ctrl == 0)):
-            b = b.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_DOWN)
+            b = str(decimal.Decimal(b).quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_DOWN))
         elif (oprd_change and (oou_ctrl == 1)):
-            b = b.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_UP)
+            b = str(decimal.Decimal(b).quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_UP))
         elif (oprd_change and (oou_ctrl == 2)):
-            b = b.quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_HALF_UP)
+            b = str(decimal.Decimal(b).quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_HALF_UP))
         if fnshd:
-            step = "a" if (len(str(a)) <= 13) else "e"
+            step = "a" if (len(a) <= 13) else "e"
     if ((i == "e") or (step == "e")):
         error = True
         Screen_Text.set("E ")
     if (step == "a"):
-        Screen_Text.set(str(a) + " ")
+        Screen_Text.set(a + " ")
     Show_debug_msg()
 
 def Rst():
@@ -105,9 +100,9 @@ def Rst():
     if (set_value or fnshd):
         set_value = fnshd = False
         if (not oprd_change):
-            a = decimal.Decimal("0")
+            a = "0"
         else:
-            b = decimal.Decimal("0")
+            b = "0"
 
 # Function_Scale
 def Scale_oou_value_change(i):
@@ -127,92 +122,83 @@ def Scale_dot_value_change(i):
 
 # Function_Button
 def Button_function_clck(i):
-    global set_ab, set_value, oprd_change, fnshd, error, dot_mode, oprt, a, b, dot, dot_count
+    global set_ab, set_value, oprd_change, fnshd, error, oprt, a, b
 
     if (i == "c"):
-        set_ab, set_value, oprd_change, fnshd, error, dot_mode, oprt, a, b, dot, dot_count = False, False, False, False, False, False, "null", decimal.Decimal("0"), decimal.Decimal("0"), decimal.Decimal("0.1"), "0.0"
+        set_ab, set_value, oprd_change, fnshd, error, oprt, a, b = False, False, False, False, False, "null", "0", "0"
         Show()
     elif ((not error) and (i == "bs")):
-        if (dot_mode and (dot_count != "0.0")):
-            dot, dot_count = (dot / decimal.Decimal("0.1")), dot_count[:-1]
-            if (not oprd_change):
-                a = a.quantize(decimal.Decimal(dot_count[:-1]), rounding = decimal.ROUND_DOWN)
-            else:
-                b = b.quantize(decimal.Decimal(dot_count[:-1]), rounding = decimal.ROUND_DOWN)
-        elif (dot_mode and (dot_count == "0.0")):
-            dot_mode = False
-            if (not oprd_change):
-                a = a.quantize(decimal.Decimal("0"), rounding = decimal.ROUND_DOWN)
-            else:
-                b = b.quantize(decimal.Decimal("0"), rounding = decimal.ROUND_DOWN)
-        elif ((not dot_mode) and (not oprd_change)):
-            a /= decimal.Decimal("10")
-            a = a.quantize(decimal.Decimal("0"), rounding = decimal.ROUND_DOWN)
-        elif ((not dot_mode) and oprd_change):
-            b /= decimal.Decimal("10")
-            b = b.quantize(decimal.Decimal("0"), rounding = decimal.ROUND_DOWN)
+        if (not oprd_change):
+            a = a[:-1]
+            if (a == ""):
+                a = "0"
+        else:
+            b = b[:-1]
+            if (b == ""):
+                b = "0"
         Show()
     elif ((not error) and (i == "pon")):
         if (not oprd_change):
-            if ((a > decimal.Decimal("0")) or (a < decimal.Decimal("0"))):
-                a *= decimal.Decimal("-1")
+            if ((decimal.Decimal(a) > decimal.Decimal("0")) or (decimal.Decimal(a) < decimal.Decimal("0"))):
+                a = str(decimal.Decimal(a) * decimal.Decimal("-1"))
         else:
-            if ((b > decimal.Decimal("0")) or (b < decimal.Decimal("0"))):
-                b *= decimal.Decimal("-1")
+            if ((decimal.Decimal(b) > decimal.Decimal("0")) or (decimal.Decimal(b) < decimal.Decimal("0"))):
+                b = str(decimal.Decimal(b) * decimal.Decimal("-1"))
         Show()
     elif ((not error) and (i == "sqrt")):
-        set_value, dot_mode, dot, dot_count = True, False, decimal.Decimal("0.1"), "0.0"
+        set_value = True
         try:
             if (not oprd_change):
-                a = a.sqrt()
+                a = str(decimal.Decimal(a).sqrt())
             else:
-                b = b.sqrt()
+                b = str(decimal.Decimal(b).sqrt())
             Execution("f")
             Show()
         except:
             # (-a).sqrt() or (-b).sqrt() error
             Execution("e")
     elif ((not error) and (i == "dot")):
-        if (((not oprd_change) and (len(str(a)) < 12)) or (oprd_change and (len(str(b)) < 12))):
+        if (((not oprd_change) and (len(a) < 12)) or (oprd_change and (len(b) < 12))):
             Rst()
-            dot_mode = True
+            if (not ("." in a)):
+                a += "."
             Show()
     elif ((not error) and (i == "equ")):
         fnshd = True
         Execution("c")
 
 def Button_function_m_clck(i):
-    global set_value, dot_mode, debug_msg_lock, a, b, m, dot, dot_count
+    global set_value, debug_msg_lock, a, b, m
 
     if (i == "mc"):
-        m = decimal.Decimal("0")
+        m = "0"
         Show_debug_msg()
     elif (not error):
         if (i == "mr"):
             Rst()
-            set_value, dot_mode, debug_msg_lock, dot, dot_count = True, False, True, decimal.Decimal("0.1"), "0.0"
+            set_value = debug_msg_lock = True
             if (not oprd_change):
                 a = m
             else:
                 b = m
             Show()
         elif ((i == "msub") and (not oprd_change)):
-            m -= a
+            m = str(decimal.Decimal(m) - decimal.Decimal(a))
         elif ((i == "msub") and oprd_change):
-            m -= b
+            m = str(decimal.Decimal(m) - decimal.Decimal(b))
         elif ((i == "madd") and (not oprd_change)):
-            m += a
+            m = str(decimal.Decimal(m) + decimal.Decimal(a))
         elif ((i == "madd") and oprd_change):
-            m += b
+            m = str(decimal.Decimal(m) + decimal.Decimal(b))
         Show_debug_msg()
 
 def Button_oprt_clck(i):
-    global set_ab, set_value, oprd_change, fnshd, dot_mode, debug_msg_lock, oprt, dot, dot_count
+    global set_ab, set_value, oprd_change, fnshd, debug_msg_lock, oprt
 
     if (not error):
         fnshd = False
         if (not oprd_change):
-            set_ab, set_value, oprd_change, dot_mode, dot, dot_count = False, False, True, False, decimal.Decimal("0.1"), "0.0"
+            set_ab, set_value, oprd_change = False, False, True
         elif (oprd_change and set_ab):
             debug_msg_lock = True
             Execution("c")
@@ -221,22 +207,18 @@ def Button_oprt_clck(i):
         Show_debug_msg()
 
 def Button_number_clck(i):
-    global a, b, dot, dot_count
+    global a, b
 
     if (not error):
         Rst()
-        if ((not dot_mode) and (not oprd_change) and (len(str(a)) < 13)):
-            a *= decimal.Decimal("10")
+        if ((not oprd_change) and (len(a) < 13)):
+            if (a == "0"):
+                a = ""
             a += i
-        elif ((not dot_mode) and oprd_change and (len(str(b)) < 13)):
-            b *= decimal.Decimal("10")
+        elif (oprd_change and (len(b) < 13)):
+            if (b == "0"):
+                b = ""
             b += i
-        elif (dot_mode and (not oprd_change) and (len(str(a)) < 13)):
-            a += (i * dot)
-            dot, dot_count = (dot * decimal.Decimal("0.1")), (dot_count + '0')
-        elif (dot_mode and oprd_change and (len(str(b)) < 13)):
-            b += (i * dot)
-            dot, dot_count = (dot * decimal.Decimal("0.1")), (dot_count + '0')
         Show()
 
 # Screen
@@ -295,16 +277,16 @@ button_Sub.place(x = 249, y = 336, width = 75, height = 50)
 button_Add.place(x = 249, y = 392, width = 75, height = 50)
 
 # Button_Number
-button_7 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = decimal.Decimal("7"): Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "7")
-button_8 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = decimal.Decimal("8"): Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "8")
-button_9 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = decimal.Decimal("9"): Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "9")
-button_4 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = decimal.Decimal("4"): Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "4")
-button_5 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = decimal.Decimal("5"): Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "5")
-button_6 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = decimal.Decimal("6"): Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "6")
-button_1 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = decimal.Decimal("1"): Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "1")
-button_2 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = decimal.Decimal("2"): Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "2")
-button_3 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = decimal.Decimal("3"): Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "3")
-button_0 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = decimal.Decimal("0"): Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "0")
+button_7 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "7": Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "7")
+button_8 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "8": Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "8")
+button_9 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "9": Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "9")
+button_4 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "4": Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "4")
+button_5 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "5": Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "5")
+button_6 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "6": Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "6")
+button_1 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "1": Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "1")
+button_2 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "2": Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "2")
+button_3 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "3": Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "3")
+button_0 = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "0": Button_number_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "0")
 
 button_7.place(x = 6, y = 224, width = 75, height = 50)
 button_8.place(x = 87, y = 224, width = 75, height = 50)
