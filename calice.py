@@ -5,7 +5,7 @@ import decimal
 # Form
 form = tk.Tk()
 form.title("Calice")
-form.iconphoto(False, tk.PhotoImage(file = "./rec/calc.png"))
+form.iconphoto(False, tk.PhotoImage(file = "calc.png"))
 form.configure(background = "LightSteelBlue")
 form.resizable(False, False)
 form.geometry("330x448")
@@ -158,11 +158,14 @@ def Button_function_clck(i):
             # (-a).sqrt() or (-b).sqrt() error
             Execution("e")
     elif ((not error) and (i == "dot")):
-        if (((not oprd_change) and (len(a) < 12)) or (oprd_change and (len(b) < 12))):
-            Rst()
+        Rst()
+        if ((not oprd_change) and (len(a) < 12)):
             if (not ("." in a)):
                 a += "."
-            Show()
+        elif (oprd_change and (len(b) < 12)):
+            if (not ("." in b)):
+                b += "."
+        Show()
     elif ((not error) and (i == "equ")):
         fnshd = True
         Execution("c")
@@ -172,25 +175,23 @@ def Button_function_m_clck(i):
 
     if (i == "mc"):
         m = "0"
-        Show_debug_msg()
-    elif (not error):
-        if (i == "mr"):
-            Rst()
-            set_value = debug_msg_lock = True
-            if (not oprd_change):
-                a = m
-            else:
-                b = m
-            Show()
-        elif ((i == "msub") and (not oprd_change)):
-            m = str(decimal.Decimal(m) - decimal.Decimal(a))
-        elif ((i == "msub") and oprd_change):
-            m = str(decimal.Decimal(m) - decimal.Decimal(b))
-        elif ((i == "madd") and (not oprd_change)):
-            m = str(decimal.Decimal(m) + decimal.Decimal(a))
-        elif ((i == "madd") and oprd_change):
-            m = str(decimal.Decimal(m) + decimal.Decimal(b))
-        Show_debug_msg()
+    elif ((not error) and (i == "mr")):
+        Rst()
+        set_value = debug_msg_lock = True
+        if (not oprd_change):
+            a = m
+        else:
+            b = m
+        Show()
+    elif ((not error) and (i == "msub") and (not oprd_change)):
+        m = str(decimal.Decimal(m) - decimal.Decimal(a))
+    elif ((not error) and (i == "msub") and oprd_change):
+        m = str(decimal.Decimal(m) - decimal.Decimal(b))
+    elif ((not error) and (i == "madd") and (not oprd_change)):
+        m = str(decimal.Decimal(m) + decimal.Decimal(a))
+    elif ((not error) and (i == "madd") and oprd_change):
+        m = str(decimal.Decimal(m) + decimal.Decimal(b))
+    Show_debug_msg()
 
 def Button_oprt_clck(i):
     global set_ab, set_value, oprd_change, fnshd, debug_msg_lock, oprt
