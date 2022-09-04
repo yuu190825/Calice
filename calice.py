@@ -55,7 +55,7 @@ def Execution(i):
                 elif (oprt == "div"):
                     a = str(decimal.Decimal(a) / decimal.Decimal(b))
                 elif (oprt == "pow"):
-                    a = str(decimal.Decimal(a) ** decimal.Decimal(b))
+                    a = str(decimal.Decimal(a) ** int(float(b)))
                 b = "0"
                 if (not fnshd):
                     step = "a" if (len(a) <= 13) else "e"
