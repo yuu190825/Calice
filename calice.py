@@ -14,8 +14,8 @@ form.geometry("330x448")
 set_ab = set_value = oprd_change = fnshd = error = debug_mode = debug_msg_lock = False
 
 # Variable_Ctrl
-oprt = "null"
-oou_ctrl, dot_ctrl = 2, "0"
+oprt, dot_ctrl = "null", "0"
+oou_ctrl = tk.IntVar()
 
 # Variable_Value
 a = b = m = "0"
@@ -24,19 +24,19 @@ a = b = m = "0"
 Screen_Text = tk.StringVar()
 
 # Function
-def Show_debug_msg():
+def Show_debug_msg(i):
     global debug_msg_lock
 
     if (debug_mode and (not debug_msg_lock)):
-        print("\n" + "set_ab = " + str(set_ab) + ", set_value = " + str(set_value) + ", oprd_change = " + str(oprd_change))
+        print("\n" + i + "\n\n" + "set_ab = " + str(set_ab) + ", set_value = " + str(set_value) + ", oprd_change = " + str(oprd_change))
         print("fnshd = " + str(fnshd) + ", error = " + str(error) + "\n")
-        print("oprt = " + oprt + ", oou_ctrl = " + str(oou_ctrl) + ", dot_ctrl = " + dot_ctrl + "\n")
+        print("oprt = " + oprt + ", oou_ctrl = " + str(oou_ctrl.get()) + ", dot_ctrl = " + dot_ctrl + "\n")
         print("a = " + a + ", b = " + b + ", m = " + m + "\n")
     debug_msg_lock = False
 
-def Show():
+def Show(i):
     Screen_Text.set((a + " ") if (not oprd_change) else (b + " "))
-    Show_debug_msg()
+    Show_debug_msg(i)
 
 def Execution(i):
     global set_ab, set_value, oprd_change, error, oprt, a, b
@@ -72,17 +72,17 @@ def Execution(i):
         # 0 -> out
         # 1 -> up
         # 2 -> 4 out 5 up
-        if ((not oprd_change) and (oou_ctrl == 0)):
+        if ((not oprd_change) and (oou_ctrl.get() == 0)):
             a = str(decimal.Decimal(a).quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_DOWN))
-        elif ((not oprd_change) and (oou_ctrl == 1)):
+        elif ((not oprd_change) and (oou_ctrl.get() == 1)):
             a = str(decimal.Decimal(a).quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_UP))
-        elif ((not oprd_change) and (oou_ctrl == 2)):
+        elif ((not oprd_change) and (oou_ctrl.get() == 2)):
             a = str(decimal.Decimal(a).quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_HALF_UP))
-        elif (oprd_change and (oou_ctrl == 0)):
+        elif (oprd_change and (oou_ctrl.get() == 0)):
             b = str(decimal.Decimal(b).quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_DOWN))
-        elif (oprd_change and (oou_ctrl == 1)):
+        elif (oprd_change and (oou_ctrl.get() == 1)):
             b = str(decimal.Decimal(b).quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_UP))
-        elif (oprd_change and (oou_ctrl == 2)):
+        elif (oprd_change and (oou_ctrl.get() == 2)):
             b = str(decimal.Decimal(b).quantize(decimal.Decimal(dot_ctrl), rounding = decimal.ROUND_HALF_UP))
         if fnshd:
             step = "a" if (len(a) <= 13) else "e"
@@ -91,7 +91,7 @@ def Execution(i):
         Screen_Text.set("E ")
     if (step == "a"):
         Screen_Text.set(a + " ")
-    Show_debug_msg()
+    Show_debug_msg("Hello World!")
 
 def Rst():
     global set_ab, set_value, fnshd, a, b
@@ -105,12 +105,6 @@ def Rst():
             b = "0"
 
 # Function_Scale
-def Scale_oou_value_change(i):
-    global oou_ctrl
-
-    oou_ctrl = int(i)
-    Show_debug_msg()
-
 def Scale_dot_value_change(i):
     global dot_ctrl
 
@@ -118,7 +112,7 @@ def Scale_dot_value_change(i):
         dot_ctrl = "0"
     else:
         dot_ctrl = ("0." + ("0" * int(i)))
-    Show_debug_msg()
+    Show_debug_msg(str(i))
 
 # Function_Button
 def Button_function_clck(i):
@@ -126,7 +120,7 @@ def Button_function_clck(i):
 
     if (i == "c"):
         set_ab, set_value, oprd_change, fnshd, error, oprt, a, b = False, False, False, False, False, "null", "0", "0"
-        Show()
+        Show(i)
     elif ((not error) and (i == "bs")):
         if (not oprd_change):
             a = a[:-1]
@@ -136,7 +130,7 @@ def Button_function_clck(i):
             b = b[:-1]
             if (b == ""):
                 b = "0"
-        Show()
+        Show(i)
     elif ((not error) and (i == "pon")):
         if (not oprd_change):
             if ((decimal.Decimal(a) > decimal.Decimal("0")) or (decimal.Decimal(a) < decimal.Decimal("0"))):
@@ -144,7 +138,7 @@ def Button_function_clck(i):
         else:
             if ((decimal.Decimal(b) > decimal.Decimal("0")) or (decimal.Decimal(b) < decimal.Decimal("0"))):
                 b = str(decimal.Decimal(b) * decimal.Decimal("-1"))
-        Show()
+        Show(i)
     elif ((not error) and (i == "sqrt")):
         set_value = True
         try:
@@ -153,7 +147,7 @@ def Button_function_clck(i):
             else:
                 b = str(decimal.Decimal(b).sqrt())
             Execution("f")
-            Show()
+            Show(i)
         except:
             # (-a).sqrt() or (-b).sqrt() error
             Execution("e")
@@ -165,7 +159,7 @@ def Button_function_clck(i):
         elif (oprd_change and (len(b) < 12)):
             if (not ("." in b)):
                 b += "."
-        Show()
+        Show(i)
     elif ((not error) and (i == "equ")):
         fnshd = True
         Execution("c")
@@ -182,7 +176,7 @@ def Button_function_m_clck(i):
             a = m
         else:
             b = m
-        Show()
+        Show("Hello World!")
     elif ((not error) and (i == "msub") and (not oprd_change)):
         m = str(decimal.Decimal(m) - decimal.Decimal(a))
     elif ((not error) and (i == "msub") and oprd_change):
@@ -191,7 +185,7 @@ def Button_function_m_clck(i):
         m = str(decimal.Decimal(m) + decimal.Decimal(a))
     elif ((not error) and (i == "madd") and oprd_change):
         m = str(decimal.Decimal(m) + decimal.Decimal(b))
-    Show_debug_msg()
+    Show_debug_msg(i)
 
 def Button_oprt_clck(i):
     global set_ab, set_value, oprd_change, fnshd, debug_msg_lock, oprt
@@ -205,7 +199,7 @@ def Button_oprt_clck(i):
             Execution("c")
         if (not error):
             oprt = i
-        Show_debug_msg()
+        Show_debug_msg(i)
 
 def Button_number_clck(i):
     global a, b
@@ -220,17 +214,17 @@ def Button_number_clck(i):
             if (b == "0"):
                 b = ""
             b += i
-        Show()
+        Show(i)
 
 # Screen
 label_Screen = tk.Label(form, anchor = "e", bd = 1, bg = "AliceBlue", fg = "Black", font = ("Noto Sans", 21), relief = "sunken", textvariable = Screen_Text)
 
 label_Screen.place(x = 6, y = 6, width = 237, height = 50)
 
-Show()
+Show("Hello World!")
 
 # Scale
-scale_OutOrUp = tk.Scale(form, activebackground = "LightSteelBlue", bd = 2.5, bg = "LightSteelBlue", command = Scale_oou_value_change, fg = "Black", font = ("Noto Sans", 13), orient = "horizontal", showvalue = False, tickinterval = 1, to = 2, troughcolor = "Black")
+scale_OutOrUp = tk.Scale(form, activebackground = "LightSteelBlue", bd = 2.5, bg = "LightSteelBlue", command = Show_debug_msg, fg = "Black", font = ("Noto Sans", 13), orient = "horizontal", showvalue = False, tickinterval = 1, to = 2, troughcolor = "Black", variable = oou_ctrl)
 scale_Dot = tk.Scale(form, activebackground = "LightSteelBlue", bd = 2.5, bg = "LightSteelBlue", command = Scale_dot_value_change, fg = "Black", font = ("Noto Sans", 13), orient = "horizontal", showvalue = False, tickinterval = 1, to = 3, troughcolor = "Black")
 
 scale_OutOrUp.place(x = 6, y = 62, width = 156)
