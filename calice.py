@@ -251,7 +251,7 @@ button_Equ.place(x = 168, y = 392, width = 75, height = 50)
 button_MC = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "mc": Button_function_m_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "MC")
 button_MR = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "mr": Button_function_m_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "MR")
 button_MW = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "madd": Button_function_m_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "MW")
-
+#
 button_MC.place(x = 6, y = 168, width = 75, height = 50)
 button_MR.place(x = 87, y = 168, width = 75, height = 50)
 button_MW.place(x = 168, y = 168, width = 75, height = 50)
