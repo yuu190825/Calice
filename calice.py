@@ -217,15 +217,15 @@ def Button_number_clck(i):
         Show(i)
 
 # Screen
-label_Screen = tk.Label(form, anchor = "e", bd = 1, bg = "AliceBlue", fg = "Black", font = ("Noto Sans", 21), relief = "sunken", textvariable = Screen_Text)
+label_Screen = tk.Label(form, anchor = "e", bd = 1, bg = "AliceBlue", fg = "Black", font = ("Noto Sans", 36), relief = "sunken", textvariable = Screen_Text)
 
-label_Screen.place(x = 6, y = 6, width = 237, height = 50)
+label_Screen.place(x = 6, y = 6, width = 318, height = 50)
 
 Show("Hello World!")
 
 # Scale
-scale_OutOrUp = tk.Scale(form, activebackground = "LightSteelBlue", bd = 2.5, bg = "LightSteelBlue", command = Show_debug_msg, fg = "Black", font = ("Noto Sans", 13), orient = "horizontal", showvalue = False, tickinterval = 1, to = 2, troughcolor = "Black", variable = oou_ctrl)
-scale_Dot = tk.Scale(form, activebackground = "LightSteelBlue", bd = 2.5, bg = "LightSteelBlue", command = Scale_dot_value_change, fg = "Black", font = ("Noto Sans", 13), orient = "horizontal", showvalue = False, tickinterval = 1, to = 3, troughcolor = "Black")
+scale_OutOrUp = tk.Scale(form, activebackground = "LightSteelBlue", bd = 2.5, bg = "LightSteelBlue", command = Show_debug_msg, fg = "Black", font = ("Noto Sans", 18), orient = "horizontal", showvalue = False, tickinterval = 1, to = 2, troughcolor = "Black", variable = oou_ctrl)
+scale_Dot = tk.Scale(form, activebackground = "LightSteelBlue", bd = 2.5, bg = "LightSteelBlue", command = Scale_dot_value_change, fg = "Black", font = ("Noto Sans", 18), orient = "horizontal", showvalue = False, tickinterval = 1, to = 3, troughcolor = "Black")
 
 scale_OutOrUp.place(x = 6, y = 62, width = 156)
 scale_Dot.place(x = 168, y = 62, width = 156)
@@ -240,7 +240,7 @@ button_Sqrt = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "Stee
 button_Dot = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "dot": Button_function_clck(x), fg = "Black", font = ("Noto Sans", 24), text = ".")
 button_Equ = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "equ": Button_function_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "=")
 
-button_BS.place(x = 249, y = 6, width = 75, height = 50)
+button_BS.place(x = 249, y = 112, width = 75, height = 50)
 button_C.place(x = 6, y = 112, width = 75, height = 50)
 button_PosOrNeg.place(x = 87, y = 112, width = 75, height = 50)
 button_Sqrt.place(x = 168, y = 112, width = 75, height = 50)
@@ -250,13 +250,11 @@ button_Equ.place(x = 168, y = 392, width = 75, height = 50)
 # Button_Function_M
 button_MC = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "mc": Button_function_m_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "MC")
 button_MR = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "mr": Button_function_m_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "MR")
-button_MSub = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "msub": Button_function_m_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "M-")
-button_MAdd = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "madd": Button_function_m_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "M+")
+button_MW = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "madd": Button_function_m_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "MW")
 
 button_MC.place(x = 6, y = 168, width = 75, height = 50)
 button_MR.place(x = 87, y = 168, width = 75, height = 50)
-button_MSub.place(x = 168, y = 168, width = 75, height = 50)
-button_MAdd.place(x = 249, y = 168, width = 75, height = 50)
+button_MW.place(x = 168, y = 168, width = 75, height = 50)
 
 # Button_Oprt
 button_Pow = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "pow": Button_oprt_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "^")
@@ -265,7 +263,7 @@ button_Mul = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "Steel
 button_Sub = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "sub": Button_oprt_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "-")
 button_Add = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "add": Button_oprt_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "+")
 
-button_Pow.place(x = 249, y = 112, width = 75, height = 50)
+button_Pow.place(x = 249, y = 168, width = 75, height = 50)
 button_Div.place(x = 249, y = 224, width = 75, height = 50)
 button_Mul.place(x = 249, y = 280, width = 75, height = 50)
 button_Sub.place(x = 249, y = 336, width = 75, height = 50)
