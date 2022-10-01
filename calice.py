@@ -177,13 +177,9 @@ def Button_function_m_clck(i):
         else:
             b = m
         Show("Hello World!")
-    elif ((not error) and (i == "msub") and (not oprd_change)):
-        m = str(decimal.Decimal(m) - decimal.Decimal(a))
-    elif ((not error) and (i == "msub") and oprd_change):
-        m = str(decimal.Decimal(m) - decimal.Decimal(b))
-    elif ((not error) and (i == "madd") and (not oprd_change)):
+    elif ((not error) and (i == "mw") and (not oprd_change)):
         m = str(decimal.Decimal(m) + decimal.Decimal(a))
-    elif ((not error) and (i == "madd") and oprd_change):
+    elif ((not error) and (i == "mw") and oprd_change):
         m = str(decimal.Decimal(m) + decimal.Decimal(b))
     Show_debug_msg(i)
 
@@ -250,8 +246,8 @@ button_Equ.place(x = 168, y = 392, width = 75, height = 50)
 # Button_Function_M
 button_MC = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "mc": Button_function_m_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "MC")
 button_MR = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "mr": Button_function_m_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "MR")
-button_MW = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "madd": Button_function_m_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "MW")
-#
+button_MW = tk.Button(form, activebackground = "SteelBlue", bd = 1, bg = "SteelBlue", command = lambda x = "mw": Button_function_m_clck(x), fg = "Black", font = ("Noto Sans", 24), text = "MW")
+
 button_MC.place(x = 6, y = 168, width = 75, height = 50)
 button_MR.place(x = 87, y = 168, width = 75, height = 50)
 button_MW.place(x = 168, y = 168, width = 75, height = 50)
